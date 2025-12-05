@@ -78,6 +78,18 @@ function RecipeDetail() {
         .order('step_number');
 
       setInstructions(instructionsData || []);
+
+      if (!user) {
+        const displayIngs = (ingredientsData || []).map(i => ({ 
+          text: `${i.amount_imperial || ''} ${i.name}`.trim() 
+        }));
+        const displayInsts = (instructionsData || []).map(inst => ({ 
+          step: inst.step_number,
+          text: inst.instruction_text 
+        }));
+        setDisplayIngredients(displayIngs);
+        setDisplayInstructions(displayInsts);
+      }
     } catch (error) {
       console.error('Error fetching recipe:', error);
     } finally {
@@ -133,6 +145,8 @@ function RecipeDetail() {
   }
 
   function loadOriginalRecipe() {
+    if (ingredients.length === 0 || instructions.length === 0) return;
+    
     setDisplayIngredients(ingredients.map(i => ({ 
       text: `${i.amount_imperial || ''} ${i.name}`.trim() 
     })));
@@ -188,7 +202,6 @@ function RecipeDetail() {
 
       setUserRating(rating);
       
-      // Recalculate average rating
       const { data: allRatings } = await supabase
         .from('ratings')
         .select('rating')
