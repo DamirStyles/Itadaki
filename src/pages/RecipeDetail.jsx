@@ -358,9 +358,25 @@ function RecipeDetail() {
 
         <div className="max-w-5xl mx-auto px-8 py-12">
           <div className="mb-12">
-            <p className="text-xl text-gray-300 leading-relaxed mb-8">
-              {recipe.description}
-            </p>
+            {(() => {
+              const descriptionParts = recipe.description.split(/(?=Prep:)/);
+              const mainDescription = descriptionParts[0].trim();
+              const timingInfo = descriptionParts[1] || '';
+              
+              return (
+                <>
+                  <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                    {mainDescription}
+                  </p>
+                  {timingInfo && (
+                    <p className="text-base text-gray-400 mb-8 italic">
+                      {timingInfo}
+                    </p>
+                  )}
+                </>
+              );
+            })()}
+            
             
             <div className="flex gap-8 mb-8">
               {recipe.prep_time && (
