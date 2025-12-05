@@ -1,16 +1,128 @@
-# React + Vite
+# Itadaki - Anime Recipe Discovery Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application that helps anime fans discover and cook iconic dishes from their favorite series. Features personalized recipe recommendations powered by MyAnimeList integration.
 
-Currently, two official plugins are available:
+**Live Demo:** https://itadaki-ochre.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## React Compiler
+Itadaki addresses a common problem in the anime community: fans want to recreate the amazing food they see on screen, but recipes are scattered across blogs, Reddit threads, and YouTube videos. This platform curates 32+ authentic recipes from popular anime series and provides personalized recommendations based on users' MyAnimeList viewing history.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+* **Curated Recipe Database:** 32 meticulously researched dishes from Naruto, Demon Slayer, My Hero Academia, Food Wars, and other popular series
+* **MyAnimeList Integration:** OAuth 2.0 authentication with personalized recommendations based on viewing history
+* **Advanced Search & Filtering:** Search by anime title, meal type, or ingredients
+* **User Interactions:** Save favorites, rate recipes, and leave comments
+* **Responsive Design:** Optimized for desktop and mobile viewing
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Technical Stack
+
+**Frontend**
+* React 18 with React Router for navigation
+* Tailwind CSS for styling
+* Custom hooks for state management
+* Vite for fast development and optimized builds
+
+**Backend**
+* Supabase (PostgreSQL database)
+* Supabase Edge Functions (Deno runtime) for OAuth handling
+* Row-Level Security for data protection
+
+**External APIs**
+* MyAnimeList API v2 with PKCE OAuth flow
+
+**Deployment**
+* Vercel for frontend hosting with automatic deployments
+* Supabase Cloud for managed database and Edge Functions
+
+## Local Development
+
+**Prerequisites**
+* Node.js 18+
+* Supabase account
+* MyAnimeList API credentials
+
+**Setup**
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/DamirStyles/Itadaki.git
+   cd Itadaki
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Create `.env.local` file:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_anon_key
+   VITE_MAL_CLIENT_ID=your_mal_client_id
+   VITE_MAL_REDIRECT_URI=http://localhost:5173/mal/callback
+   ```
+
+4. Set up the database
+   
+   Run the SQL migration files in your Supabase project (located in `/supabase/migrations/`)
+
+5. Deploy Edge Function
+   ```bash
+   supabase functions deploy mal-oauth
+   ```
+
+6. Run the development server
+   ```bash
+   npm run dev
+   ```
+
+7. Open http://localhost:5173
+
+## Project Structure
+
+```
+Itadaki/
+├── src/
+│   ├── components/       # Reusable UI components
+│   ├── contexts/         # React context providers
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Configuration (Supabase client)
+│   ├── pages/            # Route components
+│   ├── services/         # API integration layer
+│   └── utils/            # Helper functions
+├── public/
+│   └── anime-recipes-images/  # Recipe images
+├── supabase/
+│   ├── functions/        # Edge Functions
+│   └── migrations/       # Database schema
+└── README.md
+```
+
+## Future Roadmap
+
+* User-submitted recipes with moderation workflow
+* Nutritional information API integration
+* Recipe difficulty ratings and user reviews
+* Cooking time estimates based on skill level
+* Social features: follow users and share recipe collections
+* Mobile app using React Native
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT License - feel free to use this project for learning purposes.
+
+## Contact
+
+Damir - [GitHub](https://github.com/DamirStyles)
+
+Project Link: [https://github.com/DamirStyles/Itadaki](https://github.com/DamirStyles/Itadaki)
+
+---
+
+Built with ❤️ for anime fans and home cooks everywhere
