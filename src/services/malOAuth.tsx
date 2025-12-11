@@ -1,16 +1,16 @@
 const MAL_CLIENT_ID = import.meta.env.VITE_MAL_CLIENT_ID;
 
-function generateCodeVerifier() {
+function generateCodeVerifier(): string {
   const randomBytes = new Uint8Array(32);
   crypto.getRandomValues(randomBytes);
   
-  return btoa(String.fromCharCode.apply(null, randomBytes))
+  return btoa(String.fromCharCode.apply(null, Array.from(randomBytes)))
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '');
 }
 
-export async function initiateMALLogin() {
+export async function initiateMALLogin(): Promise<void> {
   const codeVerifier = generateCodeVerifier();
   // MAL requires PLAIN PKCE - code challenge equals code verifier (no SHA256 hashing)
   const codeChallenge = codeVerifier;

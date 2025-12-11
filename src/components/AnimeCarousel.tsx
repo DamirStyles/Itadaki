@@ -1,10 +1,15 @@
 import { useRef } from 'react';
 import RecipeCard from './RecipeCard';
+import { Recipe } from '../types';
 
-function AnimeCarousel({ recipes }) {
-  const scrollContainerRef = useRef(null);
+interface AnimeCarouselProps {
+  recipes: Recipe[];
+}
 
-  const scroll = (direction) => {
+function AnimeCarousel({ recipes }: AnimeCarouselProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (!container) return;
 

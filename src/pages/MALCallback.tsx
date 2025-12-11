@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 
 function MALCallback() {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     handleCallback();
@@ -36,11 +36,19 @@ function MALCallback() {
         throw new Error('Not authenticated');
       }
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('No active session');
+      }
+
       const { data, error: functionError } = await supabase.functions.invoke('mal-oauth', {
         body: {
           code,
           codeVerifier,
           userId: user.id,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
         },
       });
 
@@ -53,7 +61,7 @@ function MALCallback() {
       navigate('/', { state: { malConnected: true } });
     } catch (err) {
       console.error('OAuth callback error:', err);
-      setError(err.message);
+      setError((err as Error).message);
       setTimeout(() => navigate('/'), 3000);
     }
   };

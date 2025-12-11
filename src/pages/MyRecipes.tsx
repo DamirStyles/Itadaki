@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
+import { Recipe } from '../types';
 import Navbar from '../components/Navbar';
 import RecipeCard from '../components/RecipeCard';
 import Footer from '../components/Footer';
 
+type TabType = 'Saved' | 'History';
+
+interface CustomizedRecipe extends Recipe {
+  isCustomized?: boolean;
+}
+
 function MyRecipes() {
-  const [activeTab, setActiveTab] = useState('Saved');
-  const [savedRecipes, setSavedRecipes] = useState([]);
-  const [historyRecipes, setHistoryRecipes] = useState([]);
+  const [activeTab, setActiveTab] = useState<TabType>('Saved');
+  const [savedRecipes, setSavedRecipes] = useState<CustomizedRecipe[]>([]);
+  const [historyRecipes, setHistoryRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -23,6 +30,8 @@ function MyRecipes() {
   }, [user, navigate]);
 
   async function fetchAllRecipes() {
+    if (!user) return;
+    
     setLoading(true);
     try {
       const { data: saved, error: savedError } = await supabase
@@ -56,8 +65,8 @@ function MyRecipes() {
         return {
           ...recipe,
           isCustomized: !!(item.custom_ingredients || item.custom_instructions || item.custom_notes)
-        };
-      }).filter(r => r !== null);
+        } as CustomizedRecipe;
+      }).filter((r): r is CustomizedRecipe => r !== null);
 
       setSavedRecipes(recipesWithCustom || []);
 
@@ -78,8 +87,8 @@ function MyRecipes() {
 
       if (historyRecipesError) throw historyRecipesError;
 
-      const uniqueHistory = [];
-      const seenRecipeIds = new Set();
+      const uniqueHistory: Recipe[] = [];
+      const seenRecipeIds = new Set<number>();
       
       history?.forEach(item => {
         if (!seenRecipeIds.has(item.recipe_id)) {
@@ -120,7 +129,7 @@ function MyRecipes() {
           <h1 className="text-4xl font-bold mb-8 text-center">My Recipes</h1>
 
           <div className="flex gap-4 mb-12 border-b border-gray-700">
-            {['Saved', 'History'].map((tab) => (
+            {(['Saved', 'History'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -140,7 +149,7 @@ function MyRecipes() {
               {currentRecipes.map((recipe, index) => (
                 <div key={recipe.id || index} className="relative">
                   <RecipeCard recipe={recipe} />
-                  {recipe.isCustomized && (
+                  {('isCustomized' in recipe) && recipe.isCustomized && (
                     <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

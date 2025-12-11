@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { Recipe } from '../types';
 import Navbar from '../components/Navbar';
 import RecipeCard from '../components/RecipeCard';
 import Footer from '../components/Footer';
 
 function Search() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ function Search() {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 placeholder="Search"
                 className="w-full bg-transparent text-white text-lg pl-10 pb-3 border-b-2 border-orange-500 focus:outline-none focus:border-orange-400 transition"
               />

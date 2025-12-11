@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
@@ -14,7 +14,7 @@ function Signup() {
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -23,7 +23,7 @@ function Signup() {
       await signUp(email, password);
       setSuccess(true);
     } catch (err) {
-      setError(err.message);
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ function Signup() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               required
               className="w-full bg-transparent text-white border-b-2 border-orange-500 pb-2 focus:outline-none focus:border-orange-400 transition"
             />
@@ -125,7 +125,7 @@ function Signup() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               required
               minLength={6}
               className="w-full bg-transparent text-white border-b-2 border-orange-500 pb-2 focus:outline-none focus:border-orange-400 transition"

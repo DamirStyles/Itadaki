@@ -3,12 +3,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { malService } from '../services/malService';
 import { recipeService } from '../services/recipeService';
 import RecipeCard from './RecipeCard';
+import { Recipe } from '../types';
 
 function MALRecipesCarousel() {
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -19,6 +20,7 @@ function MALRecipesCarousel() {
   }, [user]);
 
   const loadMALRecipes = async () => {
+    if (!user) return;
     try {
       const malIds = await malService.getUserAnimeList(user.id);
 
@@ -36,7 +38,7 @@ function MALRecipesCarousel() {
     }
   };
 
-  const scroll = (direction) => {
+  const scroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (!container) return;
 

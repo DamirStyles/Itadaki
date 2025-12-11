@@ -6,8 +6,10 @@ import { initiateMALLogin } from '../services/malOAuth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+type Section = 'Account' | 'Integrations';
+
 function AccountSettings() {
-  const [activeSection, setActiveSection] = useState('Account');
+  const [activeSection, setActiveSection] = useState<Section>('Account');
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -36,22 +38,22 @@ function AccountSettings() {
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', user!.id)
         .single();
 
       if (profileError && profileError.code !== 'PGRST116') throw profileError;
 
       if (profile) {
-        setUsername(profile.username || '');
-        setIsContributor(profile.is_contributor || false);
+        setUsername((profile as any).username || '');
+        setIsContributor((profile as any).is_contributor || false);
         
-        if (profile.mal_access_token) {
+        if ((profile as any).mal_access_token) {
           setMalConnected(true);
-          setMalUsername(profile.mal_username || 'Connected');
+          setMalUsername((profile as any).mal_username || 'Connected');
         }
       }
 
-      setEmail(user.email);
+      setEmail(user!.email || '');
     } catch (error) {
       console.error('Error loading user data:', error);
       setError('Failed to load user data');
@@ -70,16 +72,16 @@ function AccountSettings() {
     setSuccess('');
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase
         .from('user_profiles')
-        .update({
+        .update as any)({
           mal_access_token: null,
           mal_refresh_token: null,
           mal_token_expires_at: null,
           mal_username: null,
           updated_at: new Date().toISOString()
         })
-        .eq('id', user.id);
+        .eq('id', user!.id);
 
       if (error) throw error;
 
@@ -101,7 +103,7 @@ function AccountSettings() {
     setSuccess('');
 
     try {
-      if (email !== user.email) {
+      if (email !== user!.email) {
         const { error: emailError } = await supabase.auth.updateUser({
           email: email
         });
@@ -110,13 +112,13 @@ function AccountSettings() {
       }
 
       if (isContributor && username) {
-        const { error: profileError } = await supabase
+        const { error: profileError } = await (supabase
           .from('user_profiles')
-          .update({
+          .update as any)({
             username: username,
             updated_at: new Date().toISOString()
           })
-          .eq('id', user.id);
+          .eq('id', user!.id);
 
         if (profileError) throw profileError;
       }
@@ -125,7 +127,8 @@ function AccountSettings() {
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       console.error('Error saving account:', error);
-      setError(error.message || 'Failed to save account changes');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save account changes';
+      setError(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -160,7 +163,8 @@ function AccountSettings() {
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       console.error('Error changing password:', error);
-      setError(error.message || 'Failed to change password');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to change password';
+      setError(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -182,7 +186,7 @@ function AccountSettings() {
       const { error: profileError } = await supabase
         .from('user_profiles')
         .delete()
-        .eq('id', user.id);
+        .eq('id', user!.id);
 
       if (profileError) throw profileError;
 

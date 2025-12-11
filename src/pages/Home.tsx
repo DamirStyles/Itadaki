@@ -1,10 +1,16 @@
+import { SyntheticEvent } from 'react';
 import Navbar from '../components/Navbar';
 import AnimeCarousel from '../components/AnimeCarousel';
 import MALRecipesCarousel from '../components/MALRecipesCarousel';
 import Footer from '../components/Footer';
+import { Recipe } from '../types';
+
+interface FeaturedBannerProps {
+  recipe: Recipe;
+}
 
 function Home() {
-  const trainingArcRecipes = [
+  const trainingArcRecipes: Recipe[] = [
     {
       id: 42,
       title: "Rengoku's Gyunabe Bento",
@@ -12,7 +18,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Rengoku's%20Gyunabe%20Bento.jpg",
       meal_type: "Main",
       rating: 4.8,
-      rating_count: 245
+      rating_count: 245,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 45,
@@ -21,7 +33,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Tanjiros%20Yamakake%20Udon.jpg",
       meal_type: "Main",
       rating: 4.6,
-      rating_count: 198
+      rating_count: 198,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 54,
@@ -30,7 +48,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Deku's%20Victory%20Katsudon.jpg",
       meal_type: "Main",
       rating: 4.7,
-      rating_count: 312
+      rating_count: 312,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 56,
@@ -39,7 +63,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Bakugo's%20Spicy%20Mapo%20Tofu.jpg",
       meal_type: "Main",
       rating: 4.9,
-      rating_count: 387
+      rating_count: 387,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 59,
@@ -48,7 +78,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Ichiraku%20Ramen.jpg",
       meal_type: "Main",
       rating: 4.8,
-      rating_count: 421
+      rating_count: 421,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 68,
@@ -57,7 +93,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Gyoza%20Hot%20Pot.jpg",
       meal_type: "Main",
       rating: 4.5,
-      rating_count: 176
+      rating_count: 176,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 63,
@@ -66,7 +108,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Senshi's%20Mushroom%20Risotto.jpg",
       meal_type: "Main",
       rating: 4.6,
-      rating_count: 234
+      rating_count: 234,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 52,
@@ -75,11 +123,17 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Gracia's%20Spinach%20Quiche.jpg",
       meal_type: "Main",
       rating: 4.4,
-      rating_count: 189
+      rating_count: 189,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     }
   ];
 
-  const festivalRecipes = [
+  const festivalRecipes: Recipe[] = [
     {
       id: 57,
       title: "Taiyaki",
@@ -87,7 +141,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Taiyaki.jpg",
       meal_type: "Dessert",
       rating: 4.7,
-      rating_count: 356
+      rating_count: 356,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 39,
@@ -96,7 +156,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Anko's%20Hanami%20Dango.jpg",
       meal_type: "Dessert",
       rating: 4.6,
-      rating_count: 289
+      rating_count: 289,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 46,
@@ -105,7 +171,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Haganezuka's%20Mitarashi%20Dango.jpg",
       meal_type: "Dessert",
       rating: 4.5,
-      rating_count: 267
+      rating_count: 267,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 44,
@@ -114,7 +186,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Mitsuri's%20Sakura%20Mochi.jpg",
       meal_type: "Dessert",
       rating: 4.6,
-      rating_count: 298
+      rating_count: 298,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 65,
@@ -123,7 +201,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Bungee%20Gum%20Mochi.jpg",
       meal_type: "Dessert",
       rating: 4.4,
-      rating_count: 223
+      rating_count: 223,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 43,
@@ -132,7 +216,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Zenitsu's%20Potato%20Mochi.jpg",
       meal_type: "Snack",
       rating: 4.5,
-      rating_count: 245
+      rating_count: 245,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 60,
@@ -141,7 +231,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Wano's%20Sweet%20Red%20Bean%20Soup.jpg",
       meal_type: "Dessert",
       rating: 4.3,
-      rating_count: 178
+      rating_count: 178,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 41,
@@ -150,11 +246,17 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Yuzu's%20Castella%20Cake.jpg",
       meal_type: "Dessert",
       rating: 4.6,
-      rating_count: 312
+      rating_count: 312,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     }
   ];
 
-  const comfortFoodRecipes = [
+  const comfortFoodRecipes: Recipe[] = [
     {
       id: 38,
       title: "Calcifer's Bacon & Eggs",
@@ -162,7 +264,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Calcifer's%20Bacon%20%26%20Eggs.jpg",
       meal_type: "Breakfast",
       rating: 4.5,
-      rating_count: 234
+      rating_count: 234,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 40,
@@ -171,7 +279,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Kiki-Pie.jpg",
       meal_type: "Main",
       rating: 4.4,
-      rating_count: 198
+      rating_count: 198,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 58,
@@ -180,7 +294,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Satsuki's%20Bento.jpg",
       meal_type: "Main",
       rating: 4.6,
-      rating_count: 267
+      rating_count: 267,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 61,
@@ -189,7 +309,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Ponyo's%20Ramen.jpg",
       meal_type: "Main",
       rating: 4.7,
-      rating_count: 298
+      rating_count: 298,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 62,
@@ -198,7 +324,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Rosso's%20Spaghetti%20Bolognese.jpg",
       meal_type: "Main",
       rating: 4.8,
-      rating_count: 345
+      rating_count: 345,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 52,
@@ -207,7 +339,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Gracia's%20Spinach%20Quiche.jpg",
       meal_type: "Main",
       rating: 4.4,
-      rating_count: 189
+      rating_count: 189,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 53,
@@ -216,7 +354,13 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Winry's%20Apple%20Pie.jpg",
       meal_type: "Dessert",
       rating: 4.7,
-      rating_count: 312
+      rating_count: 312,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     },
     {
       id: 69,
@@ -225,31 +369,57 @@ function Home() {
       hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Mukoda's%20Japanese%20Spaghetti.jpg",
       meal_type: "Main",
       rating: 4.5,
-      rating_count: 223
+      rating_count: 223,
+      created_by_user_id: null,
+      created_at: new Date().toISOString(),
+      view_count: 0,
+      popularity_score: 0,
+      updated_at: new Date().toISOString(),
+      anime_id: null
     }
   ];
 
-  const featured1 = {
+  const featured1: Recipe = {
     id: 42,
     title: "Rengoku's Gyunabe Bento",
     description: "Kyojuro Rengoku's legendary feast on the Mugen Train. The Flame Hashira's booming \"UMAI!\" echoed through the train car as he devoured stack after stack of these beef bentos with pure, unbridled joy. Rich, savory, and worth shouting about - this is what victory tastes like.",
     hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Rengoku's%20Gyunabe%20Bento.jpg",
     meal_type: "Main",
     rating: 4.8,
-    rating_count: 245
+    rating_count: 245,
+    created_by_user_id: null,
+    created_at: new Date().toISOString(),
+    view_count: 0,
+    popularity_score: 0,
+    updated_at: new Date().toISOString(),
+    anime_id: null
   };
 
-  const featured2 = {
+  const featured2: Recipe = {
     id: 39,
     title: "Anko's Hanami Dango",
     description: "Anko Mitarashi's guilty pleasure from Naruto. The sadistic interrogation expert has a notorious sweet tooth, devouring entire sticks after wrapping up S-rank missions. These tri-colored dumplings are dangerously addictive - sweet, chewy, and gone before you know it.",
     hero_image_url: "https://cisfzmzssszldaueuovi.supabase.co/storage/v1/object/public/recipe-images/Anko's%20Hanami%20Dango.jpg",
     meal_type: "Dessert",
     rating: 4.6,
-    rating_count: 289
+    rating_count: 289,
+    created_by_user_id: null,
+    created_at: new Date().toISOString(),
+    view_count: 0,
+    popularity_score: 0,
+    updated_at: new Date().toISOString(),
+    anime_id: null
   };
 
-  const FeaturedBanner = ({ recipe }) => {
+  const FeaturedBanner = ({ recipe }: FeaturedBannerProps) => {
+    const handleImageError = (e: SyntheticEvent<HTMLImageElement>) => {
+      const target = e.currentTarget;
+      target.style.display = 'none';
+      if (target.parentElement) {
+        target.parentElement.innerHTML += '<div class="text-6xl opacity-20">🍜</div>';
+      }
+    };
+
     return (
       <a href={`/recipe/${recipe.id}`} className="block hover:opacity-90 transition-opacity">
         <div className="max-w-[1400px] mx-auto px-12 py-6">
@@ -259,10 +429,7 @@ function Home() {
                 src={recipe.hero_image_url} 
                 alt={recipe.title}
                 className="w-full h-full object-cover rounded-lg"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML += '<div class="text-6xl opacity-20">🍜</div>';
-                }}
+                onError={handleImageError}
               />
             </div>
 

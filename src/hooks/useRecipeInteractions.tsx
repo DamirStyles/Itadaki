@@ -2,10 +2,18 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 
-export function useRecipeInteractions(recipeId) {
+interface RecipeInteractions {
+  isSaved: boolean;
+  userRating: number | null;
+  loading: boolean;
+  toggleSave: () => Promise<void>;
+  rateRecipe: (rating: number) => Promise<void>;
+}
+
+export function useRecipeInteractions(recipeId: number | undefined): RecipeInteractions {
   const { user } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
-  const [userRating, setUserRating] = useState(null);
+  const [userRating, setUserRating] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,8 +51,8 @@ export function useRecipeInteractions(recipeId) {
     checkInteractions();
   }, [user, recipeId]);
 
-  const toggleSave = async () => {
-    if (!user) return;
+  const toggleSave = async (): Promise<void> => {
+    if (!user || !recipeId) return;
 
     try {
       if (isSaved) {
@@ -65,8 +73,8 @@ export function useRecipeInteractions(recipeId) {
     }
   };
 
-  const rateRecipe = async (rating) => {
-    if (!user) return;
+  const rateRecipe = async (rating: number): Promise<void> => {
+    if (!user || !recipeId) return;
 
     try {
       const { error } = await supabase

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,7 +9,7 @@ function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
@@ -35,7 +35,7 @@ function ResetPassword() {
       alert('Password reset successfully!');
       navigate('/login');
     } catch (err) {
-      setError(err.message);
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ function ResetPassword() {
             <input
               type="password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
               required
               className="w-full bg-transparent text-white border-b-2 border-orange-500 pb-2 focus:outline-none focus:border-orange-400 transition"
             />
@@ -76,7 +76,7 @@ function ResetPassword() {
             <input
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
               required
               className="w-full bg-transparent text-white border-b-2 border-orange-500 pb-2 focus:outline-none focus:border-orange-400 transition"
             />

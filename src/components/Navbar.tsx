@@ -1,17 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
+import { Recipe, Anime } from '../types';
+
+interface SearchResult {
+  id: number;
+  title: string;
+  hero_image_url: string;
+  anime?: Anime;
+}
 
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const searchRef = useRef(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
     try {
@@ -34,12 +42,16 @@ function Navbar() {
     setIsSearching(true);
     const timeoutId = setTimeout(async () => {
       try {
-        const { data, error } = await supabase
-          .rpc('search_recipes', { search_term: searchQuery });
+        if (!searchQuery) return;
+        
+        // @ts-ignore
+        const result: any = await supabase.rpc('search_recipes', { search_term: searchQuery });
+
+        const { data, error } = result;
 
         if (error) throw error;
         
-        const formattedResults = (data || []).slice(0, 5).map(recipe => ({
+        const formattedResults: SearchResult[] = (data || []).slice(0, 5).map((recipe: any) => ({
           id: recipe.id,
           title: recipe.title,
           hero_image_url: recipe.hero_image_url,
@@ -60,8 +72,8 @@ function Navbar() {
   }, [searchQuery]);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSearchDropdown(false);
       }
     }
@@ -70,7 +82,7 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
@@ -79,7 +91,7 @@ function Navbar() {
     }
   };
 
-  const handleResultClick = (recipe) => {
+  const handleResultClick = (recipe: SearchResult) => {
     const slug = recipe.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     navigate(`/recipe/${slug}`);
     setShowSearchDropdown(false);

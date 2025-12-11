@@ -1,18 +1,36 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
+import { Recipe, Ingredient, Instruction } from '../types';
+
+interface DisplayIngredient {
+  text: string;
+}
+
+interface DisplayInstruction {
+  step: number;
+  text: string;
+}
+
+interface RecipeWithAnime extends Recipe {
+  anime?: {
+    title: string;
+    mal_id: number;
+    cover_image_url: string | null;
+  } | null;
+}
 
 function RecipeDetail() {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
   
-  const [recipe, setRecipe] = useState(null);
-  const [ingredients, setIngredients] = useState([]);
-  const [instructions, setInstructions] = useState([]);
+  const [recipe, setRecipe] = useState<RecipeWithAnime | null>(null);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [instructions, setInstructions] = useState<Instruction[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [isSaved, setIsSaved] = useState(false);
@@ -22,8 +40,8 @@ function RecipeDetail() {
   const [isCustomized, setIsCustomized] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
-  const [displayIngredients, setDisplayIngredients] = useState([]);
-  const [displayInstructions, setDisplayInstructions] = useState([]);
+  const [displayIngredients, setDisplayIngredients] = useState<DisplayIngredient[]>([]);
+  const [displayInstructions, setDisplayInstructions] = useState<DisplayInstruction[]>([]);
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -46,13 +64,14 @@ function RecipeDetail() {
         recipe_id: recipe.id
       });
     } catch (error) {
-      console.log('View tracking:', error.message);
+      console.log('View tracking:', (error as Error).message);
     }
   }
 
   async function fetchRecipe() {
     try {
       const recipeId = slug;
+      if (!recipeId) return;
 
       const { data: recipeData, error: recipeError } = await supabase
         .from('recipes')
@@ -80,10 +99,10 @@ function RecipeDetail() {
       setInstructions(instructionsData || []);
 
       if (!user) {
-        const displayIngs = (ingredientsData || []).map(i => ({ 
+        const displayIngs: DisplayIngredient[] = (ingredientsData || []).map(i => ({ 
           text: `${i.amount_imperial || ''} ${i.name}`.trim() 
         }));
-        const displayInsts = (instructionsData || []).map(inst => ({ 
+        const displayInsts: DisplayInstruction[] = (instructionsData || []).map(inst => ({ 
           step: inst.step_number,
           text: inst.instruction_text 
         }));
@@ -115,11 +134,11 @@ function RecipeDetail() {
         setIsCustomized(hasCustom);
         
         if (hasCustom) {
-          const customIngredients = savedData.custom_ingredients?.map(text => ({ text })) || [];
-          const customInstructions = savedData.custom_instructions?.map((text, idx) => ({ 
+          const customIngredients: DisplayIngredient[] = (savedData.custom_ingredients as string[] || []).map(text => ({ text }));
+          const customInstructions: DisplayInstruction[] = (savedData.custom_instructions as string[] || []).map((text, idx) => ({ 
             step: idx + 1, 
             text 
-          })) || [];
+          }));
           
           setDisplayIngredients(customIngredients);
           setDisplayInstructions(customInstructions);
@@ -163,6 +182,8 @@ function RecipeDetail() {
       return;
     }
 
+    if (!recipe) return;
+
     try {
       if (isSaved) {
         await supabase
@@ -185,11 +206,13 @@ function RecipeDetail() {
     }
   }
 
-  async function handleRatingClick(rating) {
+  async function handleRatingClick(rating: number) {
     if (!user) {
       navigate('/login');
       return;
     }
+
+    if (!recipe) return;
 
     try {
       await supabase
@@ -217,11 +240,11 @@ function RecipeDetail() {
           })
           .eq('id', recipe.id);
 
-        setRecipe(prev => ({
+        setRecipe(prev => prev ? ({
           ...prev,
           rating: avgRating,
           rating_count: allRatings.length
-        }));
+        }) : null);
       }
     } catch (error) {
       console.error('Error rating recipe:', error);
@@ -276,6 +299,8 @@ function RecipeDetail() {
 
   async function handleResetToOriginal() {
     if (!confirm('Reset to original recipe? This will delete your customizations.')) return;
+
+    if (!user || !recipe) return;
 
     try {
       await supabase
@@ -477,7 +502,7 @@ function RecipeDetail() {
                           <input
                             type="text"
                             value={item.text}
-                            onChange={(e) => {
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
                               const newIngredients = [...displayIngredients];
                               newIngredients[index] = { text: e.target.value };
                               setDisplayIngredients(newIngredients);
@@ -501,7 +526,7 @@ function RecipeDetail() {
                   {isEditing ? (
                     <textarea
                       value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
                       rows={4}
                       className="w-full bg-gray-900 text-white px-4 py-3 border border-gray-700 focus:border-orange-500 focus:outline-none"
                       placeholder="Add your tips..."
@@ -529,7 +554,7 @@ function RecipeDetail() {
                         {isEditing ? (
                           <textarea
                             value={instruction.text}
-                            onChange={(e) => {
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                               const newInstructions = [...displayInstructions];
                               newInstructions[index] = { ...instruction, text: e.target.value };
                               setDisplayInstructions(newInstructions);

@@ -1,7 +1,8 @@
 import { supabase } from '../lib/supabaseClient';
+import { Recipe } from '../types';
 
 export const recipeService = {
-  async getRecipesFromMALList(malIds) {
+  async getRecipesFromMALList(malIds: number[]): Promise<Recipe[]> {
     if (!malIds || malIds.length === 0) {
       return [];
     }
@@ -35,7 +36,7 @@ export const recipeService = {
 
       if (recipesError) throw recipesError;
 
-      return recipes || [];
+      return (recipes || []) as Recipe[];
     } catch (error) {
       console.error('Error fetching recipes from MAL list:', error);
       return [];

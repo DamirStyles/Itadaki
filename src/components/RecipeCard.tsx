@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
+import { Recipe } from '../types';
 
-function RecipeCard({ recipe }) {
+interface RecipeCardProps {
+  recipe: Recipe;
+}
+
+function RecipeCard({ recipe }: RecipeCardProps) {
   const slug = recipe.id;
   const rating = recipe.rating || 0;
   const ratingCount = recipe.rating_count || 0;
 
-  const renderStars = (rating) => {
+  const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;

@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { Recipe } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import RecipeCard from '../components/RecipeCard';
 
-function Browse() {
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categoryCounts, setCategoryCounts] = useState({});
+type MealType = 'All' | 'Appetizer' | 'Main' | 'Dessert' | 'Snack' | 'Drink' | 'Soup' | 'Breakfast';
 
-  const categories = ['All', 'Appetizer', 'Main', 'Dessert', 'Snack', 'Drink', 'Soup', 'Breakfast'];
+interface CategoryCounts {
+  [key: string]: number;
+}
+
+function Browse() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<MealType>('All');
+  const [categoryCounts, setCategoryCounts] = useState<CategoryCounts>({});
+
+  const categories: MealType[] = ['All', 'Appetizer', 'Main', 'Dessert', 'Snack', 'Drink', 'Soup', 'Breakfast'];
 
   useEffect(() => {
     fetchRecipes();
@@ -25,12 +32,12 @@ function Browse() {
 
       if (error) throw error;
 
-      const counts = data.reduce((acc, recipe) => {
+      const counts: CategoryCounts = (data as any[]).reduce((acc: CategoryCounts, recipe: any) => {
         acc[recipe.meal_type] = (acc[recipe.meal_type] || 0) + 1;
         return acc;
       }, {});
 
-      counts['All'] = data.length;
+      counts['All'] = (data as any[]).length;
       setCategoryCounts(counts);
     } catch (error) {
       console.error('Error fetching category counts:', error);
@@ -51,7 +58,7 @@ function Browse() {
       const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRecipes(data || []);
+      setRecipes((data as Recipe[]) || []);
     } catch (error) {
       console.error('Error fetching recipes:', error);
     } finally {
@@ -81,7 +88,7 @@ function Browse() {
                   }`}
                 >
                   <span>{category}</span>
-                  {categoryCounts[category] > 0 && (
+                  {categoryCounts[category] !== undefined && categoryCounts[category] > 0 && (
                     <span className="text-xs text-gray-500">
                       {categoryCounts[category]}
                     </span>

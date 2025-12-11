@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // Target modern browsers
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    
+    // React JSX support
+    "jsx": "react-jsx",
+    
+    // Module system for Vite
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    
+    // Allows gradual migration from JS to TS
+    "allowJs": true,
+    
+    // Don't emit files (Vite handles building)
+    "noEmit": true,
+    
+    // Strict type checking (recommended)
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    
+    // Interop and resolution
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    
+    // Better module handling
+    "moduleDetection": "force",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
